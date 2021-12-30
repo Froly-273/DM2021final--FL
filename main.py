@@ -1,6 +1,7 @@
 from tools.train import train
 from tools.generate_walk import generate_random_walk
 from tools.similarity_predict import evaluate
+from model.DLG_attack import DLG_infer
 
 # ---------------------------------------------------------------------
 # 这两个东西，如果你想选择多线程并发训练的话，选下面一个，否则选上面一个
@@ -25,10 +26,11 @@ if __name__ == "__main__":
     # -------------------------------------------------------------------
 
     # 这一步结束时，logs/baseline里会多出一个random_walk_trace.txt
-    generate_random_walk(source_path, walkpath=walk_path, p=p, q=q, num_iterations=num_walk_iterations)
+    # generate_random_walk(source_path, walkpath=walk_path, p=p, q=q, num_iterations=num_walk_iterations)
 
     # -------------------------------------------------------------------
     # word2vec的参数：batch_size，learning_rate，embedding维数，epoch数
+    # 有个bug，不推荐batch size为1，那样的话前向传播某个sum(axis=1)会报错，请至少让batch size为2
     batch_size = 1000        # batch size很大是正常的，毕竟这个数据集就大的离谱，batch size不大的话估计两晚上也train不完
     lr = 0.025
     embedding_dim = 100
@@ -36,9 +38,9 @@ if __name__ == "__main__":
     # -------------------------------------------------------------------
 
     # 多出一个baseline_model.pth和word2vec.txt
-    train(walk_path, num_epoch=num_epoch, batch_size=batch_size, embedding_dim=embedding_dim, initial_lr=lr)
+    # train(walk_path, num_epoch=num_epoch, batch_size=batch_size, embedding_dim=embedding_dim, initial_lr=lr)
     # 多出一个predictions.csv
-    evaluate('logs/baseline/word2vec.txt', test_path, 'logs/baseline/predictions.csv')
+    # evaluate('logs/baseline/word2vec.txt', test_path, 'logs/baseline/predictions.csv')
 
     # -------------------------------------------------------------------
     # FedAvg的参数：每个client内部训练的epoch数，clients数量，每个client以多大概率选中
@@ -48,6 +50,12 @@ if __name__ == "__main__":
     # -------------------------------------------------------------------
 
     # logs/FedAvg里会多出一堆.pth权重文件
-    fed_train(walk_path, num_clients=num_clients, choose_ratio=C, batch_size=batch_size, num_epoch=num_epoch,
-              num_client_epoch=num_client_epoch, initial_lr=lr)
-    evaluate('logs/FedAvg/word2vec.txt', test_path, 'logs/FedAvg/predictions.csv')
+    # fed_train(walk_path, num_clients=num_clients, choose_ratio=C, batch_size=batch_size, num_epoch=num_epoch,
+    #           num_client_epoch=num_client_epoch, initial_lr=lr)
+    # evaluate('logs/FedAvg/word2vec.txt', test_path, 'logs/FedAvg/predictions.csv')
+
+    # -------------------------------------------------------------------
+    # DLG攻击的参数
+    attack_batch_size = 1000
+    DLG_infer(0, num_clients=num_clients, batch_size=attack_batch_size, embedding_dim=embedding_dim, num_epoch=10)
+    # -------------------------------------------------------------------
