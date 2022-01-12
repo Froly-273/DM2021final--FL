@@ -1,2 +1,8 @@
 /cache
 /logs
+/Referrences
+/supplimentary materials
+/summary.txt
+/model/DLG_attack.py
+/model/DLG_attack_embedding.py
+/data/noniid/*.txt

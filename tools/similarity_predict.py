@@ -8,6 +8,8 @@ import csv
 
 
 def evaluate(fpath='logs/word2vec.txt', testpath='data/lab2_test.csv', output_path='logs/predictions.csv'):
+    # 如果想用训练过程中的最好结果做predict，改成fpath='logs/word2vec_best.txt'
+
     # 读取embedding
     embeddings = {}
     with open(fpath, 'r') as f:
@@ -37,6 +39,7 @@ def evaluate(fpath='logs/word2vec.txt', testpath='data/lab2_test.csv', output_pa
             vec_u = embeddings[u]
             vec_v = embeddings[v]
             cos_sim = np.dot(vec_u.reshape(1, -1), vec_v.reshape(-1, 1)) / (np.linalg.norm(vec_u) * np.linalg.norm(vec_v))
+            # cos_sim = 1 - distance(vec_u, vec_v)
             # print(float(cos_sim))
             predictions[nid] = cos_sim
 
@@ -49,9 +52,5 @@ def evaluate(fpath='logs/word2vec.txt', testpath='data/lab2_test.csv', output_pa
             writer.writerow([key, float(value)])
 
 
-def test():
-    evaluate()
-
-
 if __name__ == 'main':
-    test()
+    evaluate(fpath='../logs/word2vec.txt', testpath='../data/lab2_test.csv', output_path='../logs/predictions.csv')

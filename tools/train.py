@@ -1,5 +1,6 @@
 import torch
 import os
+import shutil
 
 from utils.wordlist_input import InputData
 from model.skipgram import SkipGram
@@ -12,13 +13,16 @@ def train(fname, min_count=10, num_epoch=10, batch_size=50, window_size=5, initi
     data = InputData(fname, min_count)
 
     embedding_size = len(data.word2id)  # 词典的长度,5254
+    # print(embedding_size)   # 16714
     model = SkipGram(embedding_size, embedding_dim)  # 词典的长度
     if use_GPU:
         model.cuda()
     optimizer = torch.optim.SGD(model.parameters(), lr=initial_lr)
 
     pair_count = data.evaluate_pair_count(window_size)  # 返回一个数
+    # print(pair_count)   # 100284030
     batch_count = pair_count / batch_size
+    # print(batch_count)      # 100284
 
     epoch_loss = []
     for epoch in range(num_epoch):
@@ -63,7 +67,7 @@ def train(fname, min_count=10, num_epoch=10, batch_size=50, window_size=5, initi
             param_group['lr'] = lr
 
         epoch_loss.append(sum(batch_loss) / len(batch_loss))
-        print("epoch %d in %d finished, loss: %.3f" % (epoch, num_epoch, sum(epoch_loss) / len(epoch_loss)))
+        print("epoch %d in %d finished, loss: %.3f" % (epoch+1, num_epoch, sum(epoch_loss) / len(epoch_loss)))
 
     # 保存embedding结果
     if use_GPU:
@@ -77,7 +81,8 @@ def train(fname, min_count=10, num_epoch=10, batch_size=50, window_size=5, initi
     else:
         # 我干的
         # 如果储存模型权重的文件夹还在，那就直接删掉
-        os.remove(save_folder)
+        # os.remove(save_folder)    # 用os.remove删除非空文件夹时会拒绝访问，用另一个
+        shutil.rmtree(save_folder)
         os.makedirs(save_folder)
     torch.save(model.state_dict(), save_folder+'/baseline_model.pth')
     print("End of word2vec network training, total training loss: %.4f" % (sum(epoch_loss) / len(epoch_loss)))

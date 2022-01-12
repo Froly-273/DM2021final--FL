@@ -12,10 +12,13 @@ class InputData:
     储存输入数据的类，输入的文件名file_name为保存random wolk结果的文件
     """
 
-    def __init__(self, file_name, min_count=10, client_idx=0, num_clients=0):
+    def __init__(self, file_name, min_count=10, client_idx=0, num_clients=0, iid=True, length_seed=None, batch_size=10000):
         self.input_file_name = file_name
-        self.cliend_idx = client_idx
+        self.client_idx = client_idx
         self.num_clients = num_clients
+        self.iid = iid
+        self.length_seed = length_seed
+        self.batch_size = batch_size
         self.get_words(min_count)
         self.word_pair_catch = deque()
         self.init_sample_table()
@@ -39,16 +42,27 @@ class InputData:
                         word_frequency[w] = 1
         # 分布式学习
         else:
-            assert self.cliend_idx < self.num_clients
+            assert self.client_idx < self.num_clients
             lines = self.input_file.readlines()
             self.sentence_count = len(lines)
 
             # 确定这个client获取的数据范围在哪里
-            start_line = int(self.cliend_idx * self.sentence_count / self.num_clients)
-            end_line = start_line + int(self.sentence_count / self.num_clients) - 1
-            lines = lines[start_line : end_line]
+            # 数据iid情况
+            if self.iid:
+                start_line = int(self.client_idx * self.sentence_count / self.num_clients)
+                end_line = start_line + int(self.sentence_count / self.num_clients) - 1
+                lines = lines[start_line : end_line]
+            # 数据非iid情况
+            else:
+                # 用户不指定随机长度（0~1之间）那就随机生成
+                if self.length_seed is None:
+                    self.length_seed = np.random.rand()
+                start_line = int(self.client_idx * self.sentence_count / self.num_clients)
+                end_line = start_line + max(int(self.length_seed * self.sentence_count / self.num_clients) - 1, self.batch_size)
+                lines = lines[start_line: end_line]
+
             self.sentence_count = len(lines)
-            print("client %d: got lines [%d, %d] in the dataset" % (self.cliend_idx, start_line, end_line))
+            print("client %d: got lines [%d, %d] in the dataset" % (self.client_idx, start_line, end_line))
 
             for line in lines:
                 line = line.strip().split(' ')
@@ -72,7 +86,6 @@ class InputData:
             self.word_frequency[wid] = c
             wid += 1
         self.word_count = len(self.word2id)
-
 
     def init_sample_table(self):
         self.sample_table = []

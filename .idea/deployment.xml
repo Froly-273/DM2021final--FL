@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
-  <component name="PublishConfigData" remoteFilesAllowedToDisappearOnAutoupload="false">
+  <component name="PublishConfigData" autoUpload="Always" serverName="qxw-szk@202.120.39.10:50001 (2)" remoteFilesAllowedToDisappearOnAutoupload="false">
     <serverData>
       <paths name="fredericksun@1.116.159.212:19191">
         <serverdata>
@@ -37,6 +37,13 @@
           </mappings>
         </serverdata>
       </paths>
+      <paths name="qxw-szk@202.120.39.10:50001 (2)">
+        <serverdata>
+          <mappings>
+            <mapping deploy="/home/qxw-szk/project/yanzige/Federated_Learning" local="$PROJECT_DIR$" />
+          </mappings>
+        </serverdata>
+      </paths>
       <paths name="qxw-szk@202.120.39.10:50007">
         <serverdata>
           <mappings>
@@ -52,5 +59,6 @@
         </serverdata>
       </paths>
     </serverData>
+    <option name="myAutoUpload" value="ALWAYS" />
   </component>
 </project>

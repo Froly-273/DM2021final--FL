@@ -14,3 +14,8 @@ def generate_random_walk(fpath='../data/lab2_edge.csv', walkpath='../logs/random
     walks = rw.get_random_walk(num_iterations=num_iterations)    # 获得一组随机游走链
     save_walk_result(walks, walkpath)         # 以.txt格式保存这些链
 
+if __name__ == "__main__":
+    for i in range(10):
+        root_dir = '../data/noniid/'
+        generate_random_walk(root_dir+'client'+str(i)+'.csv', root_dir+'client'+str(i)+'_walk.txt')
+        print(i)
