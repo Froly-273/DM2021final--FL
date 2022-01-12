@@ -30,7 +30,7 @@ def make_parser():
     parser.add_argument("-lr", "--learning_rate", type=float, default=0.025, help="learning rate")
     # word2vec的嵌入词向量维度
     parser.add_argument("-dim", "--embedding_dim", type=int, default=100, help="embedding dim for word2vec")
-    # 选择client的随机数种子（在多线程模式下可能失效）
+    # 选择client的随机数种子
     parser.add_argument("-s", "--seed", type=int, default=None, help="training seed, useful to deterministically choose clients")
 
     # --------------------------------
@@ -41,7 +41,7 @@ def make_parser():
     # q
     parser.add_argument("-q", "--prob_return", type=float, default=1.0, help="q value of node2vec sampling")
     # 对于每个节点，生成多少条以它为起点的随机游走路径
-    parser.add_argument("-ew", "--epoch_walk", type=int, default=80, help="number of iterations of node2vec sampling")
+    parser.add_argument("-ew", "--epoch_walk", type=int, default=100, help="number of iterations of node2vec sampling")
 
     # --------------------------------
     # 普通训练的参数
