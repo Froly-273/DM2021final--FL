@@ -1,8 +1,0 @@
-https://zhuanlan.zhihu.com/p/134054796
-https://www.zhihu.com/question/329518273
-
-google的漫话FL
-https://blog.csdn.net/jILRvRTrc/article/details/90724873
-
-一个大佬自己实现的DLG攻击
-https://blog.csdn.net/qq_36300061/article/details/106842027?spm=1001.2101.3001.6650.1&utm_medium=distribute.pc_relevant.none-task-blog-2%7Edefault%7ECTRLIST%7Edefault-1.pc_relevant_paycolumn_v2&depth_1-utm_source=distribute.pc_relevant.none-task-blog-2%7Edefault%7ECTRLIST%7Edefault-1.pc_relevant_paycolumn_v2&utm_relevant_index=2
